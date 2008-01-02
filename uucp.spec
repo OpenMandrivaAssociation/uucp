@@ -15,6 +15,7 @@ Patch9:		uucp-1.07-sigfpe.patch
 Patch10:	uucp-1.07-baudboy.patch
 Patch11:	uucp-1.06.1-pipe.patch
 BuildRequires:	texinfo
+Buildroot:	%{_tmppath}/%{name}-%{version}-%{release}-buildroot
 Requires(post):	rpm-helper info-install
 Requires(preun):	info-install
 
