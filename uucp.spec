@@ -1,7 +1,7 @@
 Summary:	The uucp utility for copying files between systems
 Name:		uucp
 Version:	1.07
-Release:	%mkrel 6
+Release:	%mkrel 7
 License:	GPL
 Group:		Networking/File transfer
 URL:		http://www.airs.com/ian/uucp.html
@@ -14,6 +14,7 @@ Patch9:		uucp-1.07-sigfpe.patch
 #(peroyvind) depends on lockdev?
 Patch10:	uucp-1.07-baudboy.patch
 Patch11:	uucp-1.06.1-pipe.patch
+Patch12:	uucp-1.07-format_not_a_string_literal_and_no_format_arguments.diff
 BuildRequires:	texinfo
 Buildroot:	%{_tmppath}/%{name}-%{version}-%{release}-buildroot
 Requires(post):	rpm-helper info-install
@@ -35,9 +36,10 @@ between machines.
 %patch9 -p1 -b .sigfpe
 #%patch10 -p1 -b .baudboy
 %patch11 -p1 -b .pipe
+%patch12 -p0 -b .format_not_a_string_literal_and_no_format_arguments
 
 %build
-LDFLAGS=-s \
+LDFLAGS="%{ldflags} -s" \
 %configure --with-newconfigdir=%{_sysconfdir}/%{name} --with-oldconfigdir=%{_sysconfdir}/%{name}
 %make 
 
