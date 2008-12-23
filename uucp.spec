@@ -15,6 +15,7 @@ Patch9:		uucp-1.07-sigfpe.patch
 Patch10:	uucp-1.07-baudboy.patch
 Patch11:	uucp-1.06.1-pipe.patch
 Patch12:	uucp-1.07-format_not_a_string_literal_and_no_format_arguments.diff
+Patch13:	uucp-1.07-nostrip.diff
 BuildRequires:	texinfo
 Buildroot:	%{_tmppath}/%{name}-%{version}-%{release}-buildroot
 Requires(post):	rpm-helper info-install
@@ -37,15 +38,18 @@ between machines.
 #%patch10 -p1 -b .baudboy
 %patch11 -p1 -b .pipe
 %patch12 -p0 -b .format_not_a_string_literal_and_no_format_arguments
+%patch13 -p1 -b .nostrip
 
 %build
-LDFLAGS="%{ldflags} -s" \
+STRIP="/bin/echo" \
+LDFLAGS="%{ldflags}" \
 %configure --with-newconfigdir=%{_sysconfdir}/%{name} --with-oldconfigdir=%{_sysconfdir}/%{name}
 %make 
 
 %install
 rm -rf $RPM_BUILD_ROOT
-%{makeinstall} install-info
+
+%{makeinstall} STRIP="/bin/echo" install-info 
 
 mkdir -p $RPM_BUILD_ROOT/var/spool/uucp
 mkdir -p $RPM_BUILD_ROOT/var/spool/uucppublic
@@ -75,6 +79,9 @@ cat > $RPM_BUILD_ROOT/etc/uucp/$i <<EOF
 # Everything after a '#' character is a comment.
 EOF
 done
+
+# fix attribs so strip can touch it
+chmod 755 $RPM_BUILD_ROOT%{_sbindir}/* $RPM_BUILD_ROOT%{_bindir}/*
 
 %clean
 rm -rf $RPM_BUILD_ROOT
