@@ -1,7 +1,7 @@
 Summary:	The uucp utility for copying files between systems
 Name:		uucp
 Version:	1.07
-Release:	%mkrel 9
+Release:	%mkrel 10
 License:	GPL
 Group:		Networking/File transfer
 URL:		http://www.airs.com/ian/uucp.html
