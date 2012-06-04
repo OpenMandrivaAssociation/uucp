@@ -1,7 +1,7 @@
 Summary:	The uucp utility for copying files between systems
 Name:		uucp
 Version:	1.07
-Release:	%mkrel 11
+Release:	12
 License:	GPL
 Group:		Networking/File transfer
 URL:		http://www.airs.com/ian/uucp.html
@@ -17,9 +17,6 @@ Patch11:	uucp-1.06.1-pipe.patch
 Patch12:	uucp-1.07-format_not_a_string_literal_and_no_format_arguments.diff
 Patch13:	uucp-1.07-nostrip.diff
 BuildRequires:	texinfo
-Buildroot:	%{_tmppath}/%{name}-%{version}-%{release}-buildroot
-Requires(post):	rpm-helper info-install
-Requires(preun):	info-install
 
 %description
 The uucp command copies files between systems.  Uucp is primarily used
@@ -49,7 +46,7 @@ LDFLAGS="%{ldflags}" \
 %install
 rm -rf %{buildroot}
 
-%{makeinstall} STRIP="/bin/echo" install-info 
+%makeinstall STRIP="/bin/echo" install-info 
 
 mkdir -p %{buildroot}/var/spool/uucp
 mkdir -p %{buildroot}/var/spool/uucppublic
@@ -83,18 +80,11 @@ done
 # fix attribs so strip can touch it
 chmod 755 %{buildroot}%{_sbindir}/* %{buildroot}%{_bindir}/*
 
-%clean
-rm -rf %{buildroot}
-
 %post
-%{_install_info uucp.info}
 # These permissions have to be synced with below %%files
 %create_ghostfile /var/log/uucp/Log uucp uucp 644
 %create_ghostfile /var/log/uucp/Stats uucp uucp 644
 %create_ghostfile /var/log/uucp/Debug uucp uucp 640
-
-%preun
-%{_remove_install_info uucp.info}
 
 %files
 %defattr(-,root,root,755)
