@@ -1,0 +1,41 @@
+--- uucp-1.07/unix/serial.c.baudboy	2004-06-08 09:00:18.877057946 -0400
++++ uucp-1.07/unix/serial.c	2004-06-08 09:00:39.723956322 -0400
+@@ -126,6 +126,11 @@
+ #include <sys/termiox.h>
+ #endif
+ 
++#define	HAVE_BAUDBOY 1
++#if HAVE_BAUDBOY
++#include <baudboy.h>
++#endif
++
+ /* Get definitions for both O_NONBLOCK and O_NDELAY.  */
+ #ifndef O_NDELAY
+ #ifdef FNDELAY
+@@ -623,6 +628,18 @@
+ 	z = zalc;
+       }
+ #else /* ! HAVE_QNX_LOCKFILES */
++#if HAVE_BAUDBOY
++      {
++	int rc;
++	
++	if (flok)
++	  rc = ttylock(qsysdep->zdevice);
++	else
++	  rc = ttyunlock(qsysdep->zdevice);
++	fret = (rc == 0 ? TRUE : FALSE);
++	return fret;
++      }
++#else /* ! HAVE_BAUDBOY */
+ #if ! HAVE_SVR4_LOCKFILES
+       {
+ 	const char *zbase;
+@@ -660,6 +677,7 @@
+ 	z = zalc;
+       }
+ #endif /* HAVE_SVR4_LOCKFILES */
++#endif /* ! HAVE_BAUDBOY */
+ #endif /* ! HAVE_QNX_LOCKFILES */
+     }
+ 

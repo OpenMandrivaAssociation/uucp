@@ -1,0 +1,26 @@
+--- uucp-1.07/Makefile.in~	2003-05-30 03:31:40.000000000 +0200
++++ uucp-1.07/Makefile.in	2004-07-29 17:51:50.294456059 +0200
+@@ -1017,17 +1017,17 @@ dist-hook:
+ 
+ install-exec-hook:
+ 	for f in uucico uuxqt; do \
+-	  chown $(OWNER) $(DESTDIR)$(sbindir)/$${f}; \
+-	  chmod 4555 $(DESTDIR)$(sbindir)/$${f}; \
++	  chown $(OWNER).$(OWNER) $(DESTDIR)$(sbindir)/$${f}; \
++	  chmod 6755 $(DESTDIR)$(sbindir)/$${f}; \
+ 	done
+ 	for f in uux uucp uustat uuname cu; do \
+-	  chown $(OWNER) $(DESTDIR)$(bindir)/$${f}; \
+-	  chmod 4555 $(DESTDIR)$(bindir)/$${f}; \
++	  chown $(OWNER).$(OWNER) $(DESTDIR)$(bindir)/$${f}; \
++	  chmod 6755 $(DESTDIR)$(bindir)/$${f}; \
+ 	done
+-@HAVE_MKDIR_FALSE@	chown $(OWNER) $(DESTDIR)$(uudirdir)
++@HAVE_MKDIR_FALSE@	chown $(OWNER).$(OWNER) $(DESTDIR)$(uudirdir)
+ @HAVE_MKDIR_FALSE@	chmod 100 $(DESTDIR)$(uudirdir)
+ @HAVE_MKDIR_FALSE@	chown root $(DESTDIR)$(uudirdir)/uudir
+-@HAVE_MKDIR_FALSE@	chmod 4555 $(DESTDIR)$(uudirdir)/uudir
++@HAVE_MKDIR_FALSE@	chmod 6755 $(DESTDIR)$(uudirdir)/uudir
+ # Tell versions [3.59,3.63) of GNU make to not export all variables.
+ # Otherwise a system limit (for SysV at least) may be exceeded.
+ .NOEXPORT:

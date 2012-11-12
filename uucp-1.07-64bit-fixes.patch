@@ -1,0 +1,20 @@
+--- uucp-1.07/unix/tcp.c.64bit-fixes	2003-05-29 08:08:49.000000000 +0200
++++ uucp-1.07/unix/tcp.c	2004-07-29 16:45:36.303433584 +0200
+@@ -395,7 +395,7 @@ ftcp_open (qconn, ibaud, fwait, fuser)
+   while (! FGOT_SIGNAL ())
+     {
+       sockaddr_storage speer;
+-      size_t clen;
++      socklen_t clen;
+       int onew;
+       pid_t ipid;
+ 
+@@ -613,7 +613,7 @@ ftcp_dial (qconn, puuconf, qsys, zphone,
+ 
+ 	  sin.sin_family = AF_INET;
+ 	  sin.sin_addr.s_addr = inet_addr ((char *) zhost);
+-	  if ((long) sin.sin_addr.s_addr == (long) -1)
++	  if ((int32_t) sin.sin_addr.s_addr == (int32_t) -1)
+ 	    {
+ 	      ulog (LOG_ERROR, "%s: unknown host name", zhost);
+ 	      return FALSE;

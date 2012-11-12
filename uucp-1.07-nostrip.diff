@@ -1,0 +1,24 @@
+diff -Naur uucp-1.07/aclocal.m4 uucp-1.07.oden/aclocal.m4
+--- uucp-1.07/aclocal.m4	2003-05-30 03:31:38.000000000 +0200
++++ uucp-1.07.oden/aclocal.m4	2008-12-23 15:16:19.000000000 +0100
+@@ -238,7 +238,7 @@
+ # STRIPPROG with the value of the STRIP variable (set by the user).
+ AC_DEFUN([AM_PROG_INSTALL_STRIP],
+ [AC_REQUIRE([AM_PROG_INSTALL_SH])dnl
+-INSTALL_STRIP_PROGRAM="\${SHELL} \$(install_sh) -c -s"
++INSTALL_STRIP_PROGRAM="\${SHELL} \$(install_sh)"
+ AC_SUBST([INSTALL_STRIP_PROGRAM])])
+ 
+ # serial 4						-*- Autoconf -*-
+diff -Naur uucp-1.07/configure uucp-1.07.oden/configure
+--- uucp-1.07/configure	2003-05-30 03:31:40.000000000 +0200
++++ uucp-1.07.oden/configure	2008-12-23 15:16:26.000000000 +0100
+@@ -1046,7 +1046,7 @@
+ 
+ install_sh=${install_sh-"$am_aux_dir/install-sh"}
+ 
+-INSTALL_STRIP_PROGRAM="\${SHELL} \$(install_sh) -c -s"
++INSTALL_STRIP_PROGRAM="\${SHELL} \$(install_sh)"
+ 
+ # We need awk for the "check" target.  The system "awk" is bad on
+ # some platforms.
