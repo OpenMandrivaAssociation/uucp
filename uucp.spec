@@ -1,7 +1,7 @@
 Summary:	The uucp utility for copying files between systems
 Name:		uucp
 Version:	1.07
-Release:	12
+Release:	14
 License:	GPL
 Group:		Networking/File transfer
 URL:		http://www.airs.com/ian/uucp.html
@@ -17,6 +17,7 @@ Patch11:	uucp-1.06.1-pipe.patch
 Patch12:	uucp-1.07-format_not_a_string_literal_and_no_format_arguments.diff
 Patch13:	uucp-1.07-nostrip.diff
 BuildRequires:	texinfo
+Requires(post):	rpm-helper
 
 %description
 The uucp command copies files between systems.  Uucp is primarily used
@@ -44,30 +45,28 @@ LDFLAGS="%{ldflags}" \
 %make 
 
 %install
-rm -rf %{buildroot}
+%{makeinstall} STRIP="/bin/echo"
 
-%makeinstall STRIP="/bin/echo" install-info 
+mkdir -p $RPM_BUILD_ROOT/var/spool/uucp
+mkdir -p $RPM_BUILD_ROOT/var/spool/uucppublic
+mkdir -p $RPM_BUILD_ROOT%{_sysconfdir}/uucp/oldconfig
 
-mkdir -p %{buildroot}/var/spool/uucp
-mkdir -p %{buildroot}/var/spool/uucppublic
-mkdir -p %{buildroot}%{_sysconfdir}/uucp/oldconfig
+rm -rf $RPM_BUILD_ROOT/var/log/uucp
+mkdir -p $RPM_BUILD_ROOT/var/log/uucp
 
-rm -rf %{buildroot}/var/log/uucp
-mkdir -p %{buildroot}/var/log/uucp
+mkdir -p $RPM_BUILD_ROOT/var/lock/uucp
 
-mkdir -p %{buildroot}/var/lock/uucp
+mkdir -p $RPM_BUILD_ROOT%{_libdir}/uucp
+ln -sf ../../sbin/uucico $RPM_BUILD_ROOT%{_libdir}/uucp
 
-mkdir -p %{buildroot}%{_libdir}/uucp
-ln -sf ../../sbin/uucico %{buildroot}%{_libdir}/uucp
-
-install -m644 %{SOURCE1} -D %{buildroot}%{_sysconfdir}/logrotate.d/uucp
+install -m644 %{SOURCE1} -D $RPM_BUILD_ROOT%{_sysconfdir}/logrotate.d/uucp
 
 # Create ghost files
-touch %{buildroot}/var/log/uucp/{Log,Stats,Debug}
+touch $RPM_BUILD_ROOT/var/log/uucp/{Log,Stats,Debug}
 
 # the following is kind of gross, but it is effective
 for i in dial passwd port dialcode sys call ; do
-cat > %{buildroot}/etc/uucp/$i <<EOF 
+cat > $RPM_BUILD_ROOT/etc/uucp/$i <<EOF 
 # This is an example of a $i file. This file have the syntax compatible
 # with Taylor UUCP (not HDB nor anything else). Please check uucp
 # documentation if you are not sure how Taylor config files are supposed to 
@@ -78,7 +77,7 @@ EOF
 done
 
 # fix attribs so strip can touch it
-chmod 755 %{buildroot}%{_sbindir}/* %{buildroot}%{_bindir}/*
+chmod 755 $RPM_BUILD_ROOT%{_sbindir}/* $RPM_BUILD_ROOT%{_bindir}/*
 
 %post
 # These permissions have to be synced with below %%files
@@ -114,4 +113,67 @@ chmod 755 %{buildroot}%{_sbindir}/* %{buildroot}%{_bindir}/*
 %config(noreplace) %{_sysconfdir}/uucp/passwd
 %config(noreplace) %{_sysconfdir}/uucp/sys
 %config(noreplace) %{_sysconfdir}/uucp/call
+
+
+
+%changelog
+* Fri May 06 2011 Oden Eriksson <oeriksson@mandriva.com> 1.07-11mdv2011.0
++ Revision: 670757
+- mass rebuild
+
+* Sat Dec 04 2010 Oden Eriksson <oeriksson@mandriva.com> 1.07-10mdv2011.0
++ Revision: 608119
+- rebuild
+
+* Mon Mar 15 2010 Oden Eriksson <oeriksson@mandriva.com> 1.07-9mdv2010.1
++ Revision: 520290
+- rebuilt for 2010.1
+
+* Thu Sep 03 2009 Christophe Fergeau <cfergeau@mandriva.com> 1.07-8mdv2010.0
++ Revision: 427486
+- rebuild
+
+* Tue Dec 23 2008 Oden Eriksson <oeriksson@mandriva.com> 1.07-7mdv2009.1
++ Revision: 317914
+- don't strip
+- fix build with -Werror=format-security (P12)
+
+* Wed Jun 18 2008 Thierry Vignaud <tv@mandriva.org> 1.07-6mdv2009.0
++ Revision: 225914
+- rebuild
+
+* Tue Mar 04 2008 Oden Eriksson <oeriksson@mandriva.com> 1.07-5mdv2008.1
++ Revision: 178848
+- rebuild
+
+  + Olivier Blin <oblin@mandriva.com>
+    - restore BuildRoot
+
+  + Thierry Vignaud <tv@mandriva.org>
+    - kill re-definition of %%buildroot on Pixel's request
+
+
+* Thu May 25 2006 Pascal Terjan <pterjan@mandriva.org> 1.07-4mdv2007.0
+- create /var/lock/uucp (#22514)
+- don't touch the log files before using %%create_ghostfile, the macro would 
+  do nothing and rights would be wrong (#22512)
+- drop prereq
+- mkrel
+
+* Sun Jan 01 2006 Mandriva Linux Team <http://www.mandrivaexpert.com/> 1.07-3mdk
+- Rebuild
+
+* Mon Mar 14 2005 Bruno Cornec <bcornec@mandrake.org> 1.07-2mdk
+- conf files used are in /etc/uucp (not /usr/conf/uucp)
+- fixes for rpmlint in the spec file
+
+* Thu Jul 29 2004 Per Øyvind Karlsen <peroyvind@linux-mandrake.com> 1.07-1mdk
+- 1.07
+- cleanups
+- drop old patches P1-P6 (fixed upstream)
+- regenerate P0 & P7
+- sync with fedora patches
+
+* Thu Sep 04 2003 Florin <florin@mandrakesoft.com> 1.06.1-23mdk
+- change the /etc dir permissions to 775
 
