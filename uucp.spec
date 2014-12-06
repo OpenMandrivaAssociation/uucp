@@ -1,12 +1,13 @@
 Summary:	The uucp utility for copying files between systems
 Name:		uucp
 Version:	1.07
-Release:	20
+Release:	21
 License:	GPL
 Group:		Networking/File transfer
 URL:		http://www.airs.com/ian/uucp.html
 Source0:	ftp://prep.ai.mit.edu/pub/gnu/%{name}-%{version}.tar.bz2
 Source1:	uucp.log
+Source2:	uucp-tmpfiles.conf
 Patch0:		uucp-1.07-misc.patch
 Patch7:		uucp-1.07-64bit-fixes.patch
 Patch8:		uucp-1.07-config.patch
@@ -60,6 +61,7 @@ mkdir -p $RPM_BUILD_ROOT%{_libdir}/uucp
 ln -sf ../../sbin/uucico $RPM_BUILD_ROOT%{_libdir}/uucp
 
 install -m644 %{SOURCE1} -D $RPM_BUILD_ROOT%{_sysconfdir}/logrotate.d/uucp
+install -m644 %{SOURCE2} -D %{buildroot}%{_tmpfilesdir}/uucp.conf
 
 # Create ghost files
 touch $RPM_BUILD_ROOT/var/log/uucp/{Log,Stats,Debug}
@@ -101,7 +103,7 @@ chmod 755 $RPM_BUILD_ROOT%{_sbindir}/* $RPM_BUILD_ROOT%{_bindir}/*
 %attr(-,uucp,uucp) %{_bindir}/*
 %{_mandir}/*/*
 %{_libdir}/uucp/uucico
-%attr(-,uucp,uucp) %dir /var/lock/uucp
+%attr(775,uucp,uucp) %dir /var/lock/uucp
 %attr(-,uucp,uucp) %dir /var/log/uucp
 %attr(644,root,root) %config(noreplace) %{_sysconfdir}/logrotate.d/uucp
 %attr(644,uucp,uucp) %ghost /var/log/uucp/Log
@@ -113,7 +115,7 @@ chmod 755 $RPM_BUILD_ROOT%{_sbindir}/* $RPM_BUILD_ROOT%{_bindir}/*
 %config(noreplace) %{_sysconfdir}/uucp/passwd
 %config(noreplace) %{_sysconfdir}/uucp/sys
 %config(noreplace) %{_sysconfdir}/uucp/call
-
+%{_tmpfilesdir}/uucp.conf
 
 
 %changelog
