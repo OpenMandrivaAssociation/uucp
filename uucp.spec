@@ -48,27 +48,27 @@ LDFLAGS="%{ldflags}" \
 %install
 %{makeinstall} STRIP="/bin/echo"
 
-mkdir -p $RPM_BUILD_ROOT/var/spool/uucp
-mkdir -p $RPM_BUILD_ROOT/var/spool/uucppublic
-mkdir -p $RPM_BUILD_ROOT%{_sysconfdir}/uucp/oldconfig
+mkdir -p %{buildroot}/var/spool/uucp
+mkdir -p %{buildroot}/var/spool/uucppublic
+mkdir -p %{buildroot}%{_sysconfdir}/uucp/oldconfig
 
-rm -rf $RPM_BUILD_ROOT/var/log/uucp
-mkdir -p $RPM_BUILD_ROOT/var/log/uucp
+rm -rf %{buildroot}/var/log/uucp
+mkdir -p %{buildroot}/var/log/uucp
 
-mkdir -p $RPM_BUILD_ROOT/var/lock/uucp
+mkdir -p %{buildroot}/var/lock/uucp
 
-mkdir -p $RPM_BUILD_ROOT%{_libdir}/uucp
-ln -sf ../../sbin/uucico $RPM_BUILD_ROOT%{_libdir}/uucp
+mkdir -p %{buildroot}%{_libdir}/uucp
+ln -sf ../../sbin/uucico %{buildroot}%{_libdir}/uucp
 
-install -m644 %{SOURCE1} -D $RPM_BUILD_ROOT%{_sysconfdir}/logrotate.d/uucp
+install -m644 %{SOURCE1} -D %{buildroot}%{_sysconfdir}/logrotate.d/uucp
 install -m644 %{SOURCE2} -D %{buildroot}%{_tmpfilesdir}/uucp.conf
 
 # Create ghost files
-touch $RPM_BUILD_ROOT/var/log/uucp/{Log,Stats,Debug}
+touch %{buildroot}/var/log/uucp/{Log,Stats,Debug}
 
 # the following is kind of gross, but it is effective
 for i in dial passwd port dialcode sys call ; do
-cat > $RPM_BUILD_ROOT/etc/uucp/$i <<EOF 
+cat > %{buildroot}/etc/uucp/$i <<EOF 
 # This is an example of a $i file. This file have the syntax compatible
 # with Taylor UUCP (not HDB nor anything else). Please check uucp
 # documentation if you are not sure how Taylor config files are supposed to 
@@ -79,7 +79,7 @@ EOF
 done
 
 # fix attribs so strip can touch it
-chmod 755 $RPM_BUILD_ROOT%{_sbindir}/* $RPM_BUILD_ROOT%{_bindir}/*
+chmod 755 %{buildroot}%{_sbindir}/* %{buildroot}%{_bindir}/*
 
 %post
 # These permissions have to be synced with below %%files
