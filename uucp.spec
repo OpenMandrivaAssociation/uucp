@@ -91,7 +91,7 @@ chmod 755 %{buildroot}%{_sbindir}/* %{buildroot}%{_bindir}/*
 %defattr(-,root,root,755)
 %doc README ChangeLog NEWS
 %doc sample contrib
-%attr(-,uucp,uucp) %dir /var/spool/uucp
+#%%attr(-,uucp,uucp) %dir /var/spool/uucp
 %attr(-,uucp,uucp) %dir /var/spool/uucppublic
 %attr(755,uucp,uucp) %dir %{_sysconfdir}/uucp
 %{_infodir}/uucp.info*
